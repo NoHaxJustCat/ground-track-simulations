@@ -1,7 +1,12 @@
 // All numbers come from output/results.json, written by simulations/pass_statistics.py
 #let res = json("/output/results.json")
 #let p = res.passes
-#let r(x, d: 1) = str(calc.round(x, digits: d))
+// round to d decimals and keep trailing zeros (4.0, 0.30)
+#let r(x, d: 1) = {
+  let parts = str(calc.round(x, digits: d)).split(".")
+  let frac = if parts.len() > 1 { parts.at(1) } else { "" }
+  if d == 0 { parts.at(0) } else { parts.at(0) + "." + frac + "0" * (d - frac.len()) }
+}
 #let mins(s, d: 2) = r(s / 60, d: d)
 #let dl-mixed = res.downlink.find(x => x.name == "Mixed 25/75")
 #let ul-chunk = res.uplink.find(x => x.name == "Code / picture chunks")
@@ -10,6 +15,8 @@
 #let yr = ver.dvs_year
 
 #set list(spacing: 1em)
+
+#show table: set par(justify: false)
 
 #show table.cell: it => {
   set text(font: "Droid Sans Armenian")
@@ -354,7 +361,7 @@ rate rather than by the link margin.
   2400 bit/s. This report follows the link budget. At 9600 bit/s the uplink volumes would be four times higher,
   and the link would still close with about 25 dB margin.
 - *Packet error rate.* The data budget quotes a PER of about 1.6 % for a 235-byte frame, while
-  $1 - (1 - 10^(-5))^1880 = 1.86 %$. Frame losses are included here and reduce the volumes by 0.6 % to 2 %.
+  $1 - (1 - 10^(-5))^1880 = 1.86$ %. Frame losses are included here and reduce the volumes by 0.6 % to 2 %.
 
 = Conclusion
 

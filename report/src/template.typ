@@ -404,7 +404,7 @@
 ) = {
   show par: set align(center)
   set par(spacing: 1.1em, justify: false) //, leading: 0.65em)
-  set page(margin: (bottom: 0pt))
+  set page(margin: (bottom: 0pt), numbering: none)
 
   text(size: 40pt, font: "Roboto Slab", weight: "extralight")[#title]
   if (subtitle != none) {
@@ -444,7 +444,8 @@
   v(5pt)
   [The Da Vinci Satellite Team\ ]
 
-  v(20em)
+  // flexible gap: a two-line title must not push the logo onto the next page
+  v(1fr)
 
   align(center)[#table(
     columns: (auto, auto),
@@ -469,7 +470,7 @@
 
   [Cover: #cover-description]
 
-  v(1fr)
+  v(10pt)
   [#publicity-statement]
 
   align(center)[#image("img/TUDelft_logo_black.svg", width: 4.5cm)]
