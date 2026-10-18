@@ -199,50 +199,67 @@ are stored in `output/verification.json`.
 
 == Comparison with Heavens-Above (ISS)
 
-The International Space Station has an orbit very similar to the DVS one (51.6° inclination, about 420 km
-altitude), and its passes are published by Heavens-Above @heavens_above, which propagates the public two-line
-elements with the SGP4 model @vallado_sgp4. All #iss.n_ref_passes ISS passes above 10° over Delft between 18 and
-27 October 2026 were compared with two predictions made from the same two-line elements @celestrak:
+To check that the passes are predicted correctly, they were compared with Heavens-Above @heavens_above, a widely
+used website that lists when satellites pass over a given location. DVS is not in orbit yet, so the International
+Space Station (ISS) was used instead: its orbit is very similar to the DVS one (51.6° inclination, about 420 km
+altitude). For Delft, Heavens-Above lists #iss.n_ref_passes ISS passes above 10° between 18 and 27 October 2026,
+each with the time at which the ISS rises above 10° and the time at which it sets below 10° again.
 
-+ *Geometry only.* The ISS positions are computed with SGP4 (Skyfield @skyfield), and the elevation and pass
-  extraction of this work are applied to them. This isolates the station model, the elevation computation and the
-  pass extraction.
-+ *Full pipeline.* The ISS state at the TLE epoch is propagated with the TudatPy model of this work (with the
-  drag area derived from the TLE drag term), followed by the same elevation and pass extraction.
+Heavens-Above computes the ISS position from its public orbit data (two-line elements @celestrak) with the
+standard SGP4 model @vallado_sgp4. The same orbit data was used here for two tests:
+
++ *Test A: pass detection only.* The ISS positions are computed with SGP4, as Heavens-Above does
+  (using Skyfield @skyfield), but the passes are found with the code of this report. Any difference therefore
+  comes only from how this work places the ground station, computes the elevation and finds the start and end
+  of each pass.
++ *Test B: complete simulation.* The ISS is propagated with the same TudatPy model that is used for DVS, starting
+  from the ISS position and velocity on 18 October. This tests the whole chain, including the orbit propagation.
+
+For every pass, the predicted start time and duration were compared with the values listed by Heavens-Above.
+@tab:iss gives the average and the largest difference.
 
 #figure(
   table(
-    columns: (auto, auto, auto, auto),
+    columns: (auto, auto, auto),
     stroke: 0.5pt,
-    align: (left, center, center, center),
+    align: (left, center, center),
     table.hline(stroke: 1pt),
-    [*Prediction*], [*Rise time* \ mean / max [s]], [*Set time* \ mean / max [s]], [*Duration* \ mean / max [s]],
+    [*Test*], [*Start of the pass* \ average / largest [s]], [*Duration of the pass* \ average / largest [s]],
     table.hline(stroke: 1pt),
-    ..(("Geometry only", iss.geometry_only), ("Full pipeline, first 2 days", iss.full_pipeline_first_2_days),
-       ("Full pipeline, 9 days", iss.full_pipeline)).map(((n, x)) => (
+    ..(("A: pass detection only", iss.geometry_only), ("B: complete simulation, first 2 days", iss.full_pipeline_first_2_days),
+       ("B: complete simulation, all 9 days", iss.full_pipeline)).map(((n, x)) => (
       [#n],
       [#r(x.rise.mean_abs_s) / #r(x.rise.max_abs_s)],
-      [#r(x.set.mean_abs_s) / #r(x.set.max_abs_s)],
       [#r(x.duration.mean_abs_s) / #r(x.duration.max_abs_s)],
     )).flatten(),
     table.hline(stroke: 1pt),
   ),
-  caption: [Absolute differences with the #iss.n_ref_passes ISS passes over Delft listed by Heavens-Above.],
+  caption: [Difference between the predicted ISS passes and the #iss.n_ref_passes passes listed by Heavens-Above.],
 ) <tab:iss>
 
 #figure(
   image("/output/verification_iss.pdf", width: 100%),
-  caption: [Differences in rise time and pass duration with respect to Heavens-Above for each ISS pass.],
+  caption: [Difference with Heavens-Above for each ISS pass. Left: start time of the pass. Right: duration of the
+    pass.],
 ) <fig:iss>
 
-The geometry agrees with Heavens-Above to within #r(iss.geometry_only.duration.max_abs_s) s, which is the
-rounding of the published times to whole seconds (@tab:iss). The full pipeline agrees to within a few seconds
-during the first two days. Afterwards, the predicted passes drift slowly later, by about 3 s per day
-(@fig:iss), because the TudatPy atmosphere and the SGP4 drag term decay the orbit at slightly different rates.
-The pass *durations*, which are what matter for the data budget, remain within
-#r(iss.full_pipeline.duration.mean_abs_s) s on average over the whole window. The largest duration difference
-(#r(iss.full_pipeline.duration.max_abs_s, d: 0) s) occurs for a grazing pass with a maximum elevation of only 11°,
-whose duration is very sensitive to small orbit differences.
+The results can be read as follows:
+
+- *Test A* agrees with Heavens-Above to about one second, which is the precision of the published times (they are
+  rounded to whole seconds). The ground station position, the elevation calculation and the pass detection are
+  therefore correct.
+- *Test B* agrees within #r(iss.full_pipeline_first_2_days.rise.max_abs_s, d: 0) s during the first two days.
+  After that, the predicted passes start slightly later every day, by about 3 s per day, reaching
+  #r(iss.full_pipeline.rise.max_abs_s, d: 0) s after nine days (left of @fig:iss). This is expected: the two models
+  use a different description of the atmosphere, so the simulated ISS is slowed down by drag at a slightly
+  different rate and gradually falls behind. Such a drift is normal for any orbit prediction over several days.
+- The *duration* of the passes, which is the only quantity used in the data budget, is not affected by this drift:
+  it agrees within #r(iss.full_pipeline.duration.mean_abs_s) s on average (right of @fig:iss). The single larger
+  difference of #r(iss.full_pipeline.duration.max_abs_s, d: 0) s belongs to a pass that only just rises above the
+  mask (maximum elevation 11°), where a tiny difference in the orbit has the largest effect on the duration.
+
+In short, the simulation predicts how long the passes last as accurately as Heavens-Above, which validates the
+contact times used in this report.
 
 == Comparison with SGP4 over One Year (DVS)
 

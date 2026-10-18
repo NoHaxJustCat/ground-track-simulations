@@ -48,7 +48,7 @@
   // supply path to cover image
   img: image("src/img/cover-image.jpg"),
   // These arguments speak for themselves
-  title: [Contact Time & Data Volume],
+  title: [Contact & Data Volume],
   subtitle: [Da Vinci Satellite],
   issue: issue,
   revision: revision,
@@ -62,7 +62,7 @@
 
 #maketitlepage(
   // These first arguments are self-explanatory
-  title: [Contact Time & Data Volume],
+  title: [Contact & Data Volume],
   subtitle: [Systems Team],
   name: "Space Engineering Practical",
   defense-date: datetime.today().display("[weekday] [month repr:long] [day], [year]") + " at 10:00",

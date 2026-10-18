@@ -154,10 +154,10 @@ print(json.dumps(ver, indent=2, default=float))
 
 # Figure: ISS timing errors w.r.t. Heavens-Above over the reference window
 fig, axes = plt.subplots(1, 2, figsize=(6.3, 2.8), sharex=True)
-for ax, col, ylabel in zip(axes, (0, 2), ("Rise time error [s]", "Duration error [s]")):
+for ax, col, ylabel in zip(axes, (0, 2), ("Start time difference [s]", "Duration difference [s]")):
     ax.axhline(0, color=GREY, lw=0.8)
-    ax.plot(days_from_epoch, d_geom[:, col], "o", color=BLUE, label="Our geometry, SGP4 orbit")
-    ax.plot(days_from_epoch, d_full[:, col], "s", color=VERMILION, mfc="none", mew=1.2, label="Full pipeline (Tudat)")
+    ax.plot(days_from_epoch, d_geom[:, col], "o", color=BLUE, label="Test A: pass detection only")
+    ax.plot(days_from_epoch, d_full[:, col], "s", color=VERMILION, mfc="none", mew=1.2, label="Test B: complete simulation")
     ax.set_ylabel(ylabel)
     ax.set_xlabel("Days since TLE epoch")
 axes[0].legend(loc="upper left")
