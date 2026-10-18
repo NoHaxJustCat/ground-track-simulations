@@ -353,8 +353,7 @@ chunks (64 B in 95 B) and full-size frames (193 B in 218 B). As in the data budg
 ) <tab:dl>
 
 In the nominal mixed scenario the satellite can downlink about *#r(dl-mixed.per_pass_mean_KB, d: 0) KB in an
-average pass* and *#r(dl-mixed.per_day_MB, d: 2) MB per day* (@tab:dl). Short passes (P10) still carry
-#r(dl-mixed.per_pass_p10_KB, d: 0) KB, which is enough for a full telemetry dump.
+average pass* and *#r(dl-mixed.per_day_MB, d: 2) MB per day* (@tab:dl).
 
 == Uplink
 
