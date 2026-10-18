@@ -1,0 +1,89 @@
+{
+  "iss": {
+    "tle_epoch_utc": "2026-10-18T03:28:15Z",
+    "n_ref_passes": 47,
+    "days": 9.114686615555556,
+    "area_m2": 376.6763173132599,
+    "geometry_only": {
+      "rise": {
+        "mean_abs_s": 0.46440848936170215,
+        "max_abs_s": 1.131206
+      },
+      "set": {
+        "mean_abs_s": 0.5472984042553192,
+        "max_abs_s": 1.303623
+      },
+      "duration": {
+        "mean_abs_s": 0.4866073191489363,
+        "max_abs_s": 1.253841
+      }
+    },
+    "full_pipeline": {
+      "rise": {
+        "mean_abs_s": 10.895398063829788,
+        "max_abs_s": 30.986705
+      },
+      "set": {
+        "mean_abs_s": 11.183291553191488,
+        "max_abs_s": 30.306623
+      },
+      "duration": {
+        "mean_abs_s": 0.7743955319148934,
+        "max_abs_s": 4.584794
+      }
+    },
+    "full_pipeline_first_2_days": {
+      "rise": {
+        "mean_abs_s": 0.6329903333333333,
+        "max_abs_s": 2.343157
+      },
+      "set": {
+        "mean_abs_s": 0.6628611111111111,
+        "max_abs_s": 2.241637
+      },
+      "duration": {
+        "mean_abs_s": 0.8126627777777776,
+        "max_abs_s": 4.584794
+      }
+    }
+  },
+  "dvs_year": {
+    "tudat": {
+      "n_passes": 1762,
+      "passes_per_day": 4.814207650273224,
+      "mean_s": 401.1535931203206,
+      "std_s": 81.08187570751082,
+      "max_s": 508.857146859169,
+      "contact_s_per_day": 1931.2366969344394,
+      "contact_s_per_day_std": 240.11001777293845
+    },
+    "sgp4_no_drag": {
+      "n_passes": 1769,
+      "passes_per_day": 4.833333333333333,
+      "mean_s": 413.8814020925083,
+      "std_s": 85.68017637043194,
+      "max_s": 522.6619407534599,
+      "contact_s_per_day": 2000.4267767804567,
+      "contact_s_per_day_std": 247.5863431678578,
+      "alt_end_min_km": 443.00310812720403,
+      "alt_end_max_km": 585.4704737158967
+    },
+    "sgp4_drag": {
+      "n_passes": 1671,
+      "passes_per_day": 4.565573770491803,
+      "mean_s": 357.86324336830546,
+      "std_s": 83.15429094223886,
+      "max_s": 498.61946403980255,
+      "contact_s_per_day": 1633.85103734546,
+      "contact_s_per_day_std": 361.3342027696877,
+      "alt_end_min_km": 228.84549595102547,
+      "alt_end_max_km": 301.0737944083697
+    }
+  },
+  "analytic": {
+    "t_max_at_min_alt_s": 391.3077766191205,
+    "t_max_at_max_alt_s": 496.4396669745249,
+    "t_max_at_max_alt_rotating_s": 517.808422123331
+  },
+  "sim_max_duration_s": 508.857146859169
+}
