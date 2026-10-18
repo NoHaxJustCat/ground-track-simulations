@@ -6,6 +6,7 @@ import numpy as np
 from scipy import stats
 
 from Ground_track_utilities import OUTPUT_DIR, propagate_elevation, find_passes
+from plot_style import BLACK, BLUE, GREY, save
 
 # ============================== INPUTS ==============================
 # Orbit and spacecraft: same as Ground_track_calendar.py
@@ -54,26 +55,19 @@ def effective_rate(rate, frames):
 def plot_distribution(values, bins, xlabel, unit, label, fname):
     """Histogram (as density) with fitted normal distribution."""
     mu, sigma = values.mean(), values.std(ddof=1)
-    fig, ax = plt.subplots(figsize=(6.4, 3.6))
-    ax.hist(values, bins=bins, density=True,
-            color="#2a78d6", alpha=0.75, edgecolor="white", linewidth=1, label=label)
+    fig, ax = plt.subplots()
+    ax.hist(values, bins=bins, density=True, color=BLUE, alpha=0.8, edgecolor="white", linewidth=0.8, label=label)
     x = np.linspace(bins[0], bins[-1], 400)
-    ax.plot(x, stats.norm.pdf(x, mu, sigma), color="#0b0b0b", lw=2, label="Normal fit")
-    ax.axvline(mu, color="#52514e", lw=1, ls="--")
-    ax.text(0.02, 0.95, f"$\\mu$ = {mu:.2f} {unit}\n$\\sigma$ = {sigma:.2f} {unit}\nN = {len(values)}",
-            transform=ax.transAxes, va="top", fontsize=9, color="#52514e")
+    ax.plot(x, stats.norm.pdf(x, mu, sigma), color=BLACK, label="Normal fit")
+    ax.axvline(mu, color=GREY, lw=1, ls="--")
+    ax.text(0.02, 0.96, f"$\\mu$ = {mu:.2f} {unit}\n$\\sigma$ = {sigma:.2f} {unit}\n$N$ = {len(values)}",
+            transform=ax.transAxes, va="top")
     ax.set_xlabel(xlabel)
     ax.set_ylabel("Probability density")
     ax.set_xlim(bins[0], bins[-1])
     ax.set_ylim(0, ax.get_ylim()[1] * 1.15)  # headroom for legend
-    ax.legend(frameon=False, fontsize=9, loc="upper right")
-    for side in ("top", "right"):
-        ax.spines[side].set_visible(False)
-    ax.grid(axis="y", color="#e5e4e0", lw=0.6)
-    ax.set_axisbelow(True)
-    fig.tight_layout()
-    fig.savefig(fname + ".pdf")
-    fig.savefig(fname + ".png", dpi=200)
+    ax.legend(loc="upper right")
+    save(fig, fname)
 
 
 if __name__ == "__main__":

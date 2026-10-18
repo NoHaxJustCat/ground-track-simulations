@@ -127,7 +127,7 @@ together with the fitted normal distribution. The satellite passes over Delft
 #r(p.contact_s_per_day / 60) min of contact per day.
 
 #figure(
-  image("/output/pass_duration_distribution.pdf", width: 90%),
+  image("/output/pass_duration_distribution.pdf", width: 100%),
   caption: [Distribution of pass durations above #r(p.min_elevation_deg, d: 0)° elevation over one year, with
     the fitted normal distribution ($mu$ = #mins(p.mean_s) min, $sigma$ = #mins(p.std_s) min).],
 ) <fig:dist>
@@ -149,12 +149,12 @@ of #mins(p.contact_s_per_day, d: 1) min ($sigma$ = #mins(p.contact_s_per_day_std
 contact time is at least #mins(p.contact_s_per_day_p10, d: 1) min, which is used below as a "low day" for planning.
 
 #figure(
-  image("/output/passes_per_day_distribution.pdf", width: 80%),
+  image("/output/passes_per_day_distribution.pdf", width: 100%),
   caption: [Distribution of the number of usable passes per day over one year, with the fitted normal distribution.],
 ) <fig:perday>
 
 #figure(
-  image("/output/contact_per_day_distribution.pdf", width: 80%),
+  image("/output/contact_per_day_distribution.pdf", width: 100%),
   caption: [Distribution of the total pass duration per day over one year, with the fitted normal distribution.],
 ) <fig:contactday>
 
@@ -263,7 +263,7 @@ term computed from the DVS ballistic coefficient.
 ) <tab:sgp4>
 
 #figure(
-  image("/output/verification_dvs.pdf", width: 85%),
+  image("/output/verification_dvs.pdf", width: 100%),
   caption: [Pass duration distribution over 2028 from TudatPy and from SGP4 without drag.],
 ) <fig:sgp4>
 

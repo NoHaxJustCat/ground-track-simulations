@@ -18,6 +18,7 @@ from skyfield.api import EarthSatellite, load, wgs84
 from skyfield.framelib import itrs
 
 from Ground_track_utilities import OUTPUT_DIR, elevation_deg, find_passes, propagate_elevation
+from plot_style import BLACK, BLUE, GREY, VERMILION, save
 
 INPUT_DIR = os.path.join(OUTPUT_DIR, "..", "inputs")
 lat, lon, min_el = 52.0, 4.4, 10.0          # same station and mask as Heavens-Above query
@@ -152,36 +153,26 @@ with open(os.path.join(OUTPUT_DIR, "verification.json"), "w") as f:
 print(json.dumps(ver, indent=2, default=float))
 
 # Figure: ISS timing errors w.r.t. Heavens-Above over the reference window
-fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.0), sharex=True)
-for ax, col, title in zip(axes, (0, 2), ("Rise time error [s]", "Duration error [s]")):
-    ax.axhline(0, color="#52514e", lw=0.8)
-    ax.plot(days_from_epoch, d_geom[:, col], "o", ms=4, color="#2a78d6", label="Our geometry, SGP4 orbit")
-    ax.plot(days_from_epoch, d_full[:, col], "s", ms=4, color="#eb6834", label="Full pipeline (Tudat)")
-    ax.set_title(title, fontsize=10, loc="left")
+fig, axes = plt.subplots(1, 2, figsize=(6.3, 2.8), sharex=True)
+for ax, col, ylabel in zip(axes, (0, 2), ("Rise time error [s]", "Duration error [s]")):
+    ax.axhline(0, color=GREY, lw=0.8)
+    ax.plot(days_from_epoch, d_geom[:, col], "o", color=BLUE, label="Our geometry, SGP4 orbit")
+    ax.plot(days_from_epoch, d_full[:, col], "s", color=VERMILION, mfc="none", mew=1.2, label="Full pipeline (Tudat)")
+    ax.set_ylabel(ylabel)
     ax.set_xlabel("Days since TLE epoch")
-    for side in ("top", "right"):
-        ax.spines[side].set_visible(False)
-    ax.grid(axis="y", color="#e5e4e0", lw=0.6)
-axes[0].legend(frameon=False, fontsize=8, loc="upper left")
-fig.tight_layout()
-fig.savefig(os.path.join(OUTPUT_DIR, "verification_iss.pdf"))
-fig.savefig(os.path.join(OUTPUT_DIR, "verification_iss.png"), dpi=200)
+axes[0].legend(loc="upper left")
+save(fig, os.path.join(OUTPUT_DIR, "verification_iss"))
 
 # Figure: DVS pass duration distribution, Tudat vs SGP4
 t_all, e_all, _ = np.load(os.path.join(OUTPUT_DIR, "elevation_history.npz")).values()
 s, e = find_passes(t_all, e_all, min_el)
 d_tudat = (e - s)[(e - s) >= min_dur]
-fig, ax = plt.subplots(figsize=(6.4, 3.2))
+fig, ax = plt.subplots(figsize=(6.3, 3.0))
 bins = np.arange(0, 9.01, 0.25)
-ax.hist(d_tudat / 60, bins=bins, density=True, color="#2a78d6", alpha=0.6, edgecolor="white", label="Tudat (this work)")
-ax.hist(dur / 60, bins=bins, density=True, histtype="step", color="#0b0b0b", lw=1.5, label="SGP4, no drag (Skyfield)")
+ax.hist(d_tudat / 60, bins=bins, density=True, color=BLUE, alpha=0.8, edgecolor="white", linewidth=0.8, label="TudatPy (this work)")
+ax.hist(dur / 60, bins=bins, density=True, histtype="step", color=BLACK, lw=1.4, label="SGP4, no drag (Skyfield)")
+ax.set_xlim(bins[0], bins[-1])
 ax.set_xlabel("Pass duration [min]")
 ax.set_ylabel("Probability density")
-ax.legend(frameon=False, fontsize=9, loc="upper left")
-for side in ("top", "right"):
-    ax.spines[side].set_visible(False)
-ax.grid(axis="y", color="#e5e4e0", lw=0.6)
-ax.set_axisbelow(True)
-fig.tight_layout()
-fig.savefig(os.path.join(OUTPUT_DIR, "verification_dvs.pdf"))
-fig.savefig(os.path.join(OUTPUT_DIR, "verification_dvs.png"), dpi=200)
+ax.legend(loc="upper left")
+save(fig, os.path.join(OUTPUT_DIR, "verification_dvs"))

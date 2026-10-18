@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from Ground_track_utilities import *
+import plot_style  # noqa: F401  (shared figure style)
 
 # ============================== INPUTS ==============================
 # Orbit
@@ -83,6 +84,8 @@ def plot_calendar(values, title, cbar_label, cmap, fname=None):
         ax.set_title(f"{calendar.month_name[m]} {y}")
         ax.set_xticks(range(7), list(calendar.day_abbr))
         ax.set_yticks([])
+        ax.grid(False)
+        ax.spines[:].set_visible(False)
         ax.tick_params(length=0)
     for ax in list(axes.flat)[len(months):]:
         ax.axis("off")
@@ -117,8 +120,8 @@ if __name__ == "__main__":
 
     stem = output_png.rsplit(".", 1)[0]
     fig1 = plot_calendar(counts, "Passes per day", "passes", "Blues")
-    fig1.savefig(f"{stem}_count.png", dpi=200)
+    fig1.savefig(f"{stem}_count.png")
     fig2 = plot_calendar(minutes, "Total pass duration per day [min]", "minutes", "Oranges")
-    fig2.savefig(f"{stem}_duration.png", dpi=200)
+    fig2.savefig(f"{stem}_duration.png")
     if show_plot:
         plt.show()
